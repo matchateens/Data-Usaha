@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import type { FormRow, ToastState } from './types';
 import { Header } from './components/Header';
 import { RowItem } from './components/RowItem';
-import { GoogleScriptModal } from './components/GoogleScriptModal';
 import { PreviewModal } from './components/PreviewModal';
 import confetti from 'canvas-confetti';
 import {
@@ -43,7 +42,6 @@ export function App() {
     return [createEmptyRow()];
   });
 
-  const [isScriptModalOpen, setIsScriptModalOpen] = useState(false);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<ToastState | null>(null);
@@ -205,8 +203,6 @@ export function App() {
         setNamaPengisi={setNamaPengisi}
         email={email}
         setEmail={setEmail}
-        onOpenScriptModal={() => setIsScriptModalOpen(true)}
-        isConfigured={!!scriptUrl}
       />
 
       {/* Main Dynamic Multi-Row Form */}
@@ -283,18 +279,6 @@ export function App() {
       </main>
 
       {/* Modals */}
-      <GoogleScriptModal
-        isOpen={isScriptModalOpen}
-        onClose={() => setIsScriptModalOpen(false)}
-        scriptUrl={scriptUrl}
-        onSaveScriptUrl={(url) => {
-          setScriptUrl(url);
-          setIsScriptModalOpen(false);
-          showToast('success', 'URL Apps Script berhasil disimpan!');
-        }}
-        showToast={showToast}
-      />
-
       <PreviewModal
         isOpen={isPreviewModalOpen}
         onClose={() => setIsPreviewModalOpen(false)}

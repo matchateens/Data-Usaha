@@ -1,13 +1,11 @@
 import React from 'react';
-import { Building2, Mail, User, Sparkles, Settings } from 'lucide-react';
+import { Building2, Mail, User, Sparkles } from 'lucide-react';
 
 interface HeaderProps {
   namaPengisi: string;
   setNamaPengisi: (nama: string) => void;
   email: string;
   setEmail: (email: string) => void;
-  onOpenScriptModal: () => void;
-  isConfigured: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -15,8 +13,6 @@ export const Header: React.FC<HeaderProps> = ({
   setNamaPengisi,
   email,
   setEmail,
-  onOpenScriptModal,
-  isConfigured,
 }) => {
   return (
     <header className="glass-panel rounded-2xl p-6 mb-8 shadow-2xl relative overflow-hidden">
@@ -34,20 +30,6 @@ export const Header: React.FC<HeaderProps> = ({
           <p className="text-slate-400 mt-1 text-sm max-w-2xl">
             Mohon isi formulir ini untuk melengkapi data usaha Anda. Anda dapat menginput <span className="text-indigo-300 font-semibold">banyak data usaha sekaligus</span> dalam satu kali kirim.
           </p>
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={onOpenScriptModal}
-            title="Pengaturan Integrasi (Admin)"
-            className={`p-2.5 rounded-xl text-xs font-medium transition-all shadow-sm ${
-              isConfigured
-                ? 'bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700'
-                : 'bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 animate-pulse'
-            }`}
-          >
-            <Settings className="w-4 h-4" />
-          </button>
         </div>
       </div>
 
