@@ -23,13 +23,8 @@ const STORAGE_KEY_SCRIPT_URL = 'sensus_ekonomi_script_url_v1';
 const DEFAULT_SCRIPT_URL = '';
 
 export function App() {
-  const [namaPengisi, setNamaPengisi] = useState<string>(() => {
-    return localStorage.getItem(STORAGE_KEY_NAMA) || '';
-  });
-
-  const [email, setEmail] = useState<string>(() => {
-    return localStorage.getItem(STORAGE_KEY_EMAIL) || '';
-  });
+  const [namaPengisi, setNamaPengisi] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
 
   const [scriptUrl, setScriptUrl] = useState<string>(() => {
     return localStorage.getItem(STORAGE_KEY_SCRIPT_URL) || DEFAULT_SCRIPT_URL;
@@ -114,6 +109,8 @@ export function App() {
   const handleReset = () => {
     if (window.confirm('Apakah Anda yakin ingin meriset semua baris data ke semula?')) {
       setRows([createEmptyRow()]);
+      setNamaPengisi('');
+      setEmail('');
       showToast('info', 'Formulir berhasil diriset.');
     }
   };
@@ -169,6 +166,8 @@ export function App() {
 
       showToast('success', `🎉 Berhasil mengirim ${rows.length} data usaha ke Google Spreadsheet!`);
       setRows([createEmptyRow()]);
+      setNamaPengisi('');
+      setEmail('');
       setIsPreviewModalOpen(false);
 
     } catch (err) {
