@@ -25,7 +25,7 @@ export function App() {
   const [namaPengisi, setNamaPengisi] = useState<string>('');
   const [email, setEmail] = useState<string>('');
 
-  const [scriptUrl, setScriptUrl] = useState<string>(() => {
+  const [scriptUrl] = useState<string>(() => {
     return localStorage.getItem(STORAGE_KEY_SCRIPT_URL) || DEFAULT_SCRIPT_URL;
   });
 
@@ -35,7 +35,7 @@ export function App() {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      } catch (e) {
+      } catch (_e) {
         // fallback
       }
     }
@@ -116,7 +116,6 @@ export function App() {
   const handleSendToSheets = async () => {
     if (!scriptUrl) {
       showToast('error', 'Silakan atur Web App URL Google Apps Script terlebih dahulu!');
-      setIsScriptModalOpen(true);
       return;
     }
 
