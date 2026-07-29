@@ -199,26 +199,6 @@ export function App() {
         </div>
       )}
 
-      {/* Setup Alert Banner if scriptUrl not set */}
-      {!scriptUrl && (
-        <div className="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-sm flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-lg">
-          <div className="flex items-center gap-3">
-            <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />
-            <div>
-              <p className="font-semibold">Web App URL Google Sheets Belum Dikonfigurasi</p>
-              <p className="text-xs text-amber-300/80">
-                Klik tombol di sebelah kanan untuk memasang script Google Apps Script gratis pada spreadsheet Anda.
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => setIsScriptModalOpen(true)}
-            className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs transition-all shrink-0 self-start md:self-auto"
-          >
-            Setup Sekarang
-          </button>
-        </div>
-      )}
 
       {/* Header */}
       <Header
