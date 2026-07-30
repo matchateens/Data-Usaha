@@ -10,7 +10,6 @@ export interface SupabaseConfig {
 
 export interface DataUsahaRow {
   nama_pengisi: string;
-  email: string;
   nama_usaha: string;
   kategori_digital: string;
   kategori_usaha: string;

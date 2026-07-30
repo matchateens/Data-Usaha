@@ -18,16 +18,11 @@ import {
 
 const STORAGE_KEY_ROWS = 'sensus_ekonomi_rows_draft_v1';
 const STORAGE_KEY_NAMA = 'sensus_ekonomi_nama_v1';
-const STORAGE_KEY_EMAIL = 'sensus_ekonomi_email_v1';
 
 export function App() {
   const [namaPengisi, setNamaPengisi] = useState<string>(() => {
     return localStorage.getItem(STORAGE_KEY_NAMA) || '';
   });
-  const [email, setEmail] = useState<string>(() => {
-    return localStorage.getItem(STORAGE_KEY_EMAIL) || '';
-  });
-
   const [isDbConnected, setIsDbConnected] = useState<boolean>(() => isSupabaseConfigured());
 
   const [rows, setRows] = useState<FormRow[]>(() => {
@@ -52,10 +47,6 @@ export function App() {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY_NAMA, namaPengisi);
   }, [namaPengisi]);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY_EMAIL, email);
-  }, [email]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY_ROWS, JSON.stringify(rows));
@@ -106,7 +97,6 @@ export function App() {
     if (window.confirm('Apakah Anda yakin ingin meriset semua baris data ke semula?')) {
       setRows([createEmptyRow()]);
       setNamaPengisi('');
-      setEmail('');
       showToast('info', 'Formulir berhasil diriset.');
     }
   };
@@ -123,11 +113,6 @@ export function App() {
       return;
     }
 
-    if (!email.trim()) {
-      showToast('error', 'Silakan isi Alamat Email Pengisi terlebih dahulu!');
-      return;
-    }
-
     const uncompleted = rows.filter((r) => !r.namaUsaha.trim() || !r.kategoriDigital || !r.kategoriUsaha);
     if (uncompleted.length > 0) {
       showToast('error', `Terdapat ${uncompleted.length} baris data yang belum lengkap. Harap lengkapi semua kolom!`);
@@ -138,7 +123,6 @@ export function App() {
     try {
       const payload = rows.map((r) => ({
         nama_pengisi: namaPengisi.trim(),
-        email: email.trim(),
         nama_usaha: r.namaUsaha.trim(),
         kategori_digital: r.kategoriDigital,
         kategori_usaha: r.kategoriUsaha,
@@ -156,7 +140,6 @@ export function App() {
         showToast('success', result.message);
         setRows([createEmptyRow()]);
         setNamaPengisi('');
-        setEmail('');
         setIsPreviewModalOpen(false);
       } else {
         showToast('error', result.message);
@@ -195,8 +178,6 @@ export function App() {
       <Header
         namaPengisi={namaPengisi}
         setNamaPengisi={setNamaPengisi}
-        email={email}
-        setEmail={setEmail}
         isDbConnected={isDbConnected}
         onOpenSettings={() => setIsSettingsModalOpen(true)}
       />
@@ -279,7 +260,6 @@ export function App() {
         isOpen={isPreviewModalOpen}
         onClose={() => setIsPreviewModalOpen(false)}
         namaPengisi={namaPengisi}
-        email={email}
         rows={rows}
         onConfirmSend={handleSendToSupabase}
         isSubmitting={isSubmitting}

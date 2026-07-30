@@ -6,7 +6,6 @@ interface PreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   namaPengisi: string;
-  email: string;
   rows: FormRow[];
   onConfirmSend: () => void;
   isSubmitting: boolean;
@@ -16,7 +15,6 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
   isOpen,
   onClose,
   namaPengisi,
-  email,
   rows,
   onConfirmSend,
   isSubmitting,
@@ -26,7 +24,7 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
   const invalidRows = rows.filter(
     (r) => !r.namaUsaha.trim() || !r.kategoriDigital || !r.kategoriUsaha
   );
-  const isValid = invalidRows.length === 0 && !!email.trim() && !!namaPengisi.trim();
+  const isValid = invalidRows.length === 0 && !!namaPengisi.trim();
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
@@ -52,14 +50,10 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
         </div>
 
         {/* Respondent Info Badge */}
-        <div className="mb-4 p-4 rounded-xl bg-slate-900/60 border border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <div className="mb-4 p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-xs">
           <div>
             <span className="text-slate-400 block mb-0.5">Nama Lengkap Pengisi:</span>
             <span className="font-semibold text-white">{namaPengisi || <span className="text-rose-400 italic">Belum diisi</span>}</span>
-          </div>
-          <div>
-            <span className="text-slate-400 block mb-0.5">Email Pengisi:</span>
-            <span className="font-semibold text-indigo-300">{email || <span className="text-rose-400 italic">Belum diisi</span>}</span>
           </div>
         </div>
 
@@ -67,8 +61,8 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
           <div className="mb-4 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>
-              {!namaPengisi.trim() || !email.trim()
-                ? 'Nama Lengkap & Alamat Email Wajib diisi!'
+              {!namaPengisi.trim()
+                ? 'Nama Lengkap Wajib diisi!'
                 : `Terdapat ${invalidRows.length} baris data yang belum lengkap (Nama, Kategori Digital, atau Kategori Usaha).`}
             </span>
           </div>

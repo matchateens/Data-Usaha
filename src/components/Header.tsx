@@ -1,11 +1,9 @@
 import React from 'react';
-import { Building2, Mail, User, Sparkles, Settings, Database } from 'lucide-react';
+import { Building2, User, Sparkles, Settings, Database } from 'lucide-react';
 
 interface HeaderProps {
   namaPengisi: string;
   setNamaPengisi: (nama: string) => void;
-  email: string;
-  setEmail: (email: string) => void;
   isDbConnected: boolean;
   onOpenSettings: () => void;
 }
@@ -13,8 +11,6 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   namaPengisi,
   setNamaPengisi,
-  email,
-  setEmail,
   isDbConnected,
   onOpenSettings,
 }) => {
@@ -58,8 +54,8 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Respondent Info Section: Nama Lengkap + Email */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+      {/* Respondent Info Section: Nama Lengkap */}
+      <div className="mt-6">
         <div>
           <label className="block text-sm font-medium text-slate-300 mb-2">
             Nama Lengkap Pengisi <span className="text-rose-400">*</span>
@@ -78,28 +74,9 @@ export const Header: React.FC<HeaderProps> = ({
             />
           </div>
         </div>
-
-        <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
-            Email Pengisi <span className="text-rose-400">*</span>
-          </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-              <Mail className="w-4 h-4" />
-            </div>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Alamat email valid (contoh: user@gmail.com)"
-              required
-              className="glass-input w-full pl-10 pr-4 py-2.5 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none"
-            />
-          </div>
-        </div>
       </div>
       <p className="text-xs text-slate-500 mt-2">
-        Nama Lengkap dan Email ini akan dilampirkan otomatis pada setiap baris data usaha yang dikirimkan.
+        Nama Lengkap ini akan dilampirkan otomatis pada setiap baris data usaha yang dikirimkan.
       </p>
     </header>
   );
