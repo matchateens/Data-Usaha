@@ -46,7 +46,7 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
           <div>
             <h2 className="text-xl font-bold text-white">Ringkasan Data Sebelum Dikirim</h2>
             <p className="text-xs text-slate-400">
-              Periksa kembali {rows.length} data usaha di bawah ini sebelum dikirim ke Google Sheets.
+              Periksa kembali {rows.length} data usaha di bawah ini sebelum dikirim ke database.
             </p>
           </div>
         </div>

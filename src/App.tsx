@@ -3,6 +3,8 @@ import type { FormRow, ToastState } from './types';
 import { Header } from './components/Header';
 import { RowItem } from './components/RowItem';
 import { PreviewModal } from './components/PreviewModal';
+import { SettingsModal } from './components/SettingsModal';
+import { isSupabaseConfigured, insertDataUsaha } from './lib/supabase';
 import confetti from 'canvas-confetti';
 import {
   Plus,
@@ -17,17 +19,16 @@ import {
 const STORAGE_KEY_ROWS = 'sensus_ekonomi_rows_draft_v1';
 const STORAGE_KEY_NAMA = 'sensus_ekonomi_nama_v1';
 const STORAGE_KEY_EMAIL = 'sensus_ekonomi_email_v1';
-const STORAGE_KEY_SCRIPT_URL = 'sensus_ekonomi_script_url_v1';
-
-const DEFAULT_SCRIPT_URL = '';
 
 export function App() {
-  const [namaPengisi, setNamaPengisi] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-
-  const [scriptUrl] = useState<string>(() => {
-    return localStorage.getItem(STORAGE_KEY_SCRIPT_URL) || DEFAULT_SCRIPT_URL;
+  const [namaPengisi, setNamaPengisi] = useState<string>(() => {
+    return localStorage.getItem(STORAGE_KEY_NAMA) || '';
   });
+  const [email, setEmail] = useState<string>(() => {
+    return localStorage.getItem(STORAGE_KEY_EMAIL) || '';
+  });
+
+  const [isDbConnected, setIsDbConnected] = useState<boolean>(() => isSupabaseConfigured());
 
   const [rows, setRows] = useState<FormRow[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEY_ROWS);
@@ -43,6 +44,7 @@ export function App() {
   });
 
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<ToastState | null>(null);
 
@@ -54,10 +56,6 @@ export function App() {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY_EMAIL, email);
   }, [email]);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY_SCRIPT_URL, scriptUrl);
-  }, [scriptUrl]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY_ROWS, JSON.stringify(rows));
@@ -113,9 +111,10 @@ export function App() {
     }
   };
 
-  const handleSendToSheets = async () => {
-    if (!scriptUrl) {
-      showToast('error', 'Silakan atur Web App URL Google Apps Script terlebih dahulu!');
+  const handleSendToSupabase = async () => {
+    if (!isSupabaseConfigured()) {
+      showToast('error', 'Database belum dikonfigurasi. Klik tombol "Pengaturan Database" di bagian atas untuk menghubungkan ke Supabase.');
+      setIsSettingsModalOpen(true);
       return;
     }
 
@@ -138,38 +137,34 @@ export function App() {
     setIsSubmitting(true);
     try {
       const payload = rows.map((r) => ({
-        timestamp: new Date().toLocaleString('id-ID'),
-        namaPengisi: namaPengisi.trim(),
+        nama_pengisi: namaPengisi.trim(),
         email: email.trim(),
-        namaUsaha: r.namaUsaha.trim(),
-        kategoriDigital: r.kategoriDigital,
-        kategoriUsaha: r.kategoriUsaha,
+        nama_usaha: r.namaUsaha.trim(),
+        kategori_digital: r.kategoriDigital,
+        kategori_usaha: r.kategoriUsaha,
       }));
 
-      await fetch(scriptUrl, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      const result = await insertDataUsaha(payload);
 
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
+      if (result.success) {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
 
-      showToast('success', `🎉 Berhasil mengirim ${rows.length} data usaha ke Google Spreadsheet!`);
-      setRows([createEmptyRow()]);
-      setNamaPengisi('');
-      setEmail('');
-      setIsPreviewModalOpen(false);
+        showToast('success', result.message);
+        setRows([createEmptyRow()]);
+        setNamaPengisi('');
+        setEmail('');
+        setIsPreviewModalOpen(false);
+      } else {
+        showToast('error', result.message);
+      }
 
     } catch (err) {
       console.error(err);
-      showToast('error', 'Gagal mengirim data. Silakan periksa kembali URL Apps Script Anda.');
+      showToast('error', 'Gagal mengirim data. Periksa koneksi internet dan konfigurasi database Anda.');
     } finally {
       setIsSubmitting(false);
     }
@@ -202,6 +197,8 @@ export function App() {
         setNamaPengisi={setNamaPengisi}
         email={email}
         setEmail={setEmail}
+        isDbConnected={isDbConnected}
+        onOpenSettings={() => setIsSettingsModalOpen(true)}
       />
 
       {/* Main Dynamic Multi-Row Form */}
@@ -266,7 +263,7 @@ export function App() {
 
             <button
               type="button"
-              onClick={handleSendToSheets}
+              onClick={handleSendToSupabase}
               disabled={isSubmitting}
               className="px-7 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-xl shadow-indigo-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
             >
@@ -284,8 +281,14 @@ export function App() {
         namaPengisi={namaPengisi}
         email={email}
         rows={rows}
-        onConfirmSend={handleSendToSheets}
+        onConfirmSend={handleSendToSupabase}
         isSubmitting={isSubmitting}
+      />
+
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+        onSaved={() => setIsDbConnected(isSupabaseConfigured())}
       />
     </div>
   );

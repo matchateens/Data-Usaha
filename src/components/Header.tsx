@@ -1,11 +1,13 @@
 import React from 'react';
-import { Building2, Mail, User, Sparkles } from 'lucide-react';
+import { Building2, Mail, User, Sparkles, Settings, Database } from 'lucide-react';
 
 interface HeaderProps {
   namaPengisi: string;
   setNamaPengisi: (nama: string) => void;
   email: string;
   setEmail: (email: string) => void;
+  isDbConnected: boolean;
+  onOpenSettings: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -13,6 +15,8 @@ export const Header: React.FC<HeaderProps> = ({
   setNamaPengisi,
   email,
   setEmail,
+  isDbConnected,
+  onOpenSettings,
 }) => {
   return (
     <header className="glass-panel rounded-2xl p-6 mb-8 shadow-2xl relative overflow-hidden">
@@ -30,6 +34,27 @@ export const Header: React.FC<HeaderProps> = ({
           <p className="text-slate-400 mt-1 text-sm max-w-2xl">
             Mohon isi formulir ini untuk melengkapi data usaha Anda. Anda dapat menginput <span className="text-indigo-300 font-semibold">banyak data usaha sekaligus</span> dalam satu kali kirim.
           </p>
+        </div>
+
+        {/* Database Status + Settings Button */}
+        <div className="flex flex-col items-end gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={onOpenSettings}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 text-slate-200 text-xs font-medium transition-all group"
+          >
+            <Settings className="w-4 h-4 text-slate-400 group-hover:text-indigo-400 transition-colors group-hover:rotate-90 duration-300" />
+            <span>Pengaturan Database</span>
+          </button>
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium ${
+            isDbConnected
+              ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400'
+              : 'bg-rose-500/10 border border-rose-500/20 text-rose-400'
+          }`}>
+            <Database className="w-3 h-3" />
+            <span className={`w-1.5 h-1.5 rounded-full ${isDbConnected ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'}`} />
+            {isDbConnected ? 'Supabase Terhubung' : 'Belum Terkonfigurasi'}
+          </div>
         </div>
       </div>
 
