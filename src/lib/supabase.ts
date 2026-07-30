@@ -16,11 +16,11 @@ export interface DataUsahaRow {
   kategori_usaha: string;
 }
 
-// Ambil config dari localStorage atau .env
+// Ambil config dari localStorage atau hardcode
 export function getSupabaseConfig(): SupabaseConfig {
   return {
-    url: localStorage.getItem(STORAGE_KEY_URL) || import.meta.env.VITE_SUPABASE_URL || '',
-    anonKey: localStorage.getItem(STORAGE_KEY_KEY) || import.meta.env.VITE_SUPABASE_ANON_KEY || '',
+    url: localStorage.getItem(STORAGE_KEY_URL) || 'https://xxwnvyzfpphxodajcmkm.supabase.co',
+    anonKey: localStorage.getItem(STORAGE_KEY_KEY) || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh4d252eXpmcHBoeG9kYWpjbWttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MjIxMjgsImV4cCI6MjEwMDk5ODEyOH0.zUJDjri9n2yvidpXv_FMzO5ICcz6b1ERB8t_MDR5yXw',
   };
 }
 
