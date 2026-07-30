@@ -121,7 +121,7 @@ export async function insertDataUsaha(
   let lastError = '';
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
-      const { data, error } = await client
+      const { error } = await client
         .from('data_usaha')
         .insert(rows);
 
