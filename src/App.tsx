@@ -2,18 +2,17 @@ import { useState, useEffect } from 'react';
 import type { FormRow, ToastState } from './types';
 import { Header } from './components/Header';
 import { RowItem } from './components/RowItem';
-import { PreviewModal } from './components/PreviewModal';
 import { SettingsModal } from './components/SettingsModal';
 import { isSupabaseConfigured, insertDataUsaha } from './lib/supabase';
 import confetti from 'canvas-confetti';
 import {
   Plus,
   Send,
-  Eye,
   RotateCcw,
   CheckCircle2,
   AlertTriangle,
-  Info
+  Info,
+  Loader2
 } from 'lucide-react';
 
 const STORAGE_KEY_ROWS = 'sensus_ekonomi_rows_draft_v1';
@@ -38,7 +37,6 @@ export function App() {
     return [createEmptyRow()];
   });
 
-  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<ToastState | null>(null);
@@ -138,13 +136,8 @@ export function App() {
         });
 
         showToast('success', result.message);
-        setIsPreviewModalOpen(false);
-        
-        // Beri jeda sedikit sebelum reset state agar animasi tutup modal terlihat mulus
-        setTimeout(() => {
-          setRows([createEmptyRow()]);
-          setNamaPengisi('');
-        }, 300);
+        setRows([createEmptyRow()]);
+        setNamaPengisi('');
       } else {
         showToast('error', result.message);
       }
@@ -239,36 +232,22 @@ export function App() {
           <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
             <button
               type="button"
-              onClick={() => setIsPreviewModalOpen(true)}
-              className="px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-sm flex items-center justify-center gap-2 transition-all shadow-md"
-            >
-              <Eye className="w-4 h-4 text-slate-400" />
-              <span>Preview</span>
-            </button>
-
-            <button
-              type="button"
               onClick={handleSendToSupabase}
               disabled={isSubmitting}
               className="px-7 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-xl shadow-indigo-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
             >
-              <Send className="w-4 h-4" />
-              <span>Kirim {rows.length} Data Usaha</span>
+              {isSubmitting ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Send className="w-4 h-4" />
+              )}
+              <span>{isSubmitting ? 'Mengirim...' : `Kirim ${rows.length} Data Usaha`}</span>
             </button>
           </div>
         </div>
       </main>
 
       {/* Modals */}
-      <PreviewModal
-        isOpen={isPreviewModalOpen}
-        onClose={() => setIsPreviewModalOpen(false)}
-        namaPengisi={namaPengisi}
-        rows={rows}
-        onConfirmSend={handleSendToSupabase}
-        isSubmitting={isSubmitting}
-      />
-
       <SettingsModal
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
