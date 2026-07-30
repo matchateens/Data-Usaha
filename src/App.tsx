@@ -138,9 +138,13 @@ export function App() {
         });
 
         showToast('success', result.message);
-        setRows([createEmptyRow()]);
-        setNamaPengisi('');
         setIsPreviewModalOpen(false);
+        
+        // Beri jeda sedikit sebelum reset state agar animasi tutup modal terlihat mulus
+        setTimeout(() => {
+          setRows([createEmptyRow()]);
+          setNamaPengisi('');
+        }, 300);
       } else {
         showToast('error', result.message);
       }
