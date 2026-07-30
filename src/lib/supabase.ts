@@ -141,8 +141,8 @@ export async function insertDataUsaha(
 
       return {
         success: true,
-        message: `🎉 Berhasil menyimpan ${data?.length || rows.length} data usaha ke database!`,
-        insertedCount: data?.length || rows.length,
+        message: `🎉 Berhasil menyimpan ${rows.length} data usaha ke database!`,
+        insertedCount: rows.length,
       };
     } catch (err) {
       lastError = err instanceof Error ? err.message : 'Unknown error';
