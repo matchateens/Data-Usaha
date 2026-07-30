@@ -16,11 +16,11 @@ export interface DataUsahaRow {
   kategori_usaha: string;
 }
 
-// Ambil config dari localStorage
+// Ambil config dari localStorage atau .env
 export function getSupabaseConfig(): SupabaseConfig {
   return {
-    url: localStorage.getItem(STORAGE_KEY_URL) || '',
-    anonKey: localStorage.getItem(STORAGE_KEY_KEY) || '',
+    url: localStorage.getItem(STORAGE_KEY_URL) || import.meta.env.VITE_SUPABASE_URL || '',
+    anonKey: localStorage.getItem(STORAGE_KEY_KEY) || import.meta.env.VITE_SUPABASE_ANON_KEY || '',
   };
 }
 
